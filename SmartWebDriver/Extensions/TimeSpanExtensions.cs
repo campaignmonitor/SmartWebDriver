@@ -11,12 +11,12 @@ namespace SmartWebDriver.Extensions
 
         public static TimeSpan Seconds(this int @int)
         {
-            return new TimeSpan(0, 0, 0, @int, 0);
+            return new TimeSpan(0, 0, @int);
         }
 
         public static TimeSpan Minutes(this int @int)
         {
-            return new TimeSpan(0, 0, @int, 0);
+            return new TimeSpan(0, @int, 0);
         }
     }
 }
