@@ -295,6 +295,11 @@ namespace SmartWebDriver
             }
         }
 
+        public ReadOnlyCollection<IWebElement> FindAll(PageElement pageElement)
+        {
+            return GetElements(pageElement);
+        }
+
         public string GetAttributeValue(PageElement pageElement, string attributeName)
         {
             var webElement = GetElement(pageElement);
@@ -815,6 +820,13 @@ namespace SmartWebDriver
             });
 
             _webdriver.SwitchTo().Frame(iFrameIndex);
+        }
+
+        public void SwitchToIFrame(PageElement pageElement)
+        {
+            WaitForAny(pageElement, 30.Seconds());
+            var webElement = GetElement(pageElement);
+            _webdriver.SwitchTo().Frame(webElement);
         }
 
         /// <summary>
