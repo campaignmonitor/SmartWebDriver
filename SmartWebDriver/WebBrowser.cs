@@ -407,6 +407,15 @@ namespace SmartWebDriver
         }
 
         /// <summary>
+        /// Get the full html source of the page
+        /// </summary>
+        /// <returns></returns>
+        public string GetPageSource()
+        {
+            return _webdriver.PageSource;
+        }
+
+        /// <summary>
         /// Get the section by section number <paramref name="sectionIndex"/> within <paramref name="pageElement"/>
         /// </summary>
         /// <param name="pageElement">The element with sections</param>
@@ -817,6 +826,41 @@ namespace SmartWebDriver
             var wait = new WebDriverWait(_webdriver, 30.Seconds());
             wait.Until(d => tabIndex + 1 <= d.WindowHandles.Count);
             _webdriver.SwitchTo().Window(_webdriver.WindowHandles[tabIndex]);
+        }
+
+        /// <summary>
+        /// Open a pop up and perform an action to interrogate the pop up
+        /// </summary>
+        /// <param name="causePopupAction">The action that causes the pop up to open</param>
+        /// <param name="inPopupActivityAction">Any action you'd like to to do within the pop up - for example any further data entry and assertions</param>
+        public void TriggerPopupAndPerformActionWithinIt(Action causePopupAction, Action inPopupActivityAction)
+        {
+            var currentWindowHandle = _webdriver.CurrentWindowHandle;
+            var originalWindowHandles = _webdriver.WindowHandles;
+
+            causePopupAction();
+
+            string popupHandle = null;
+            Wait.UpTo(5.Seconds()).For(() =>
+            {
+                var newHandles = _webdriver.WindowHandles.Except(originalWindowHandles).ToList();
+                var testResponse = new TestResponse(newHandles.Count > 0, "Was expecting a popup window to load, but it didn't");
+                if (testResponse.PassFailResult)
+                {
+                    popupHandle = newHandles[0];
+                }
+
+                return testResponse;
+            });
+
+            _webdriver.SwitchTo().Window(popupHandle);
+
+            // Do whatever you need to in the popup browser
+            inPopupActivityAction();
+
+            // Close the pop up and go back to where you were
+            _webdriver.Close();
+            _webdriver.SwitchTo().Window(currentWindowHandle);
         }
 
         public void Uncheck(PageElement pageElement)
