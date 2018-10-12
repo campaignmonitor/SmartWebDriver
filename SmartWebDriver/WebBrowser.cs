@@ -192,7 +192,7 @@ namespace SmartWebDriver
             }
             catch (Exception e)
             {
-                throw new Exception("\n\nTried to clear: " + pageElement.Description + ",\n\nbut got an error: " +
+                throw new Exception("Tried to clear: " + pageElement.Description + ",\n\nbut got an error: " +
                                     e.Message + ",\n\nStack Trace: \n" + e.StackTrace);
             }
         }
@@ -495,6 +495,34 @@ namespace SmartWebDriver
             _webdriver.Navigate().Back();
         }
 
+        private static bool IsAngularSleeping(IWebDriver driver, string cssSelector)
+        {
+            var executor = driver as IJavaScriptExecutor;
+
+            if (driver == null)
+            {
+                throw new ArgumentException("Must be a javascript executor");
+            }
+            const string script = @"
+                return (function(selector) {
+                    var b = false;
+                    var callback = function() { b = true; };
+                    var el = document.querySelector(selector);
+                    angular.element(el).injector().get('$browser').
+                          notifyWhenNoOutstandingRequests(callback);
+                    return b;
+                })(arguments[0]);``
+                ";
+            var done = (bool)executor.ExecuteScript(script, cssSelector);
+
+            if (done)
+            {
+                Thread.Sleep(500);
+            }
+
+            return done;
+        }
+
         public bool IsEnabled(PageElement pageElement)
         {
             var webElement = GetElement(pageElement);
@@ -715,6 +743,31 @@ namespace SmartWebDriver
         }
 
         /// <summary>
+        /// Clear out a textbox by using Ctrl+A, Delete. Particularly useful for custom editors/inputs
+        /// </summary>
+        /// <param name="pageElement"></param>
+        public void SelectAllThenDelete(PageElement pageElement)
+        {
+            var webElement = GetElement(pageElement);
+            try
+            {
+                webElement.Click();
+                Thread.Sleep(500.Milliseconds());
+                var action = new Actions(_webdriver)
+                    .KeyDown(Keys.Control)
+                    .SendKeys("a")
+                    .KeyUp(Keys.Control)
+                    .SendKeys(Keys.Delete);
+                action.Build().Perform();
+                Thread.Sleep(500.Milliseconds());
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Tried to remove the text from '" + pageElement.Description + "' using Ctrl+A, Delete but it failed!", e);
+            }
+        }
+
+        /// <summary>
         /// Send the provided keys to the given element
         /// </summary>
         /// <param name="pageElement"></param>
@@ -921,6 +974,18 @@ namespace SmartWebDriver
                 return new TestResponse(desiredValues.Any(finalValue => finalValue == cssValue),
                     $"Failed to wait for the '{pageElement.Description}' element to have one of the expected values ({string.Join(", ", desiredValues)}) in the '{styleProperty}' property, but it was: {cssValue}");
             });
+        }
+
+        public void WaitForAngular(PageElement pageElement)
+        {
+            if (pageElement.Css == null)
+            {
+                throw new Exception("Unable to wait for angular on '" + pageElement.Description +
+                                    "' since it doesn't have a css selector value");
+            }
+            Wait.UpTo(15.Seconds()).For(() => new TestResponse(IsAngularSleeping(_webdriver, pageElement.Css),
+                    "Tried to check if the cssSelector for '" + pageElement.Description + "' is Angular: " +
+                    pageElement.Css + ",\n\nbut got an error"));
         }
 
         /// <summary>

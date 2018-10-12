@@ -4,3 +4,5 @@
 - Changing to .Net Framework 4.6.1 from 4.6.2
 # 1.0.2 - 12 Oct, 2018
 - Adding 2 more browser functions, for getting page source and interacting with a popup
+# 1.0.3/1.0.4 - 12 Oct 2018
+- Expanding the browser functions for angular interactions and a custom deletion
