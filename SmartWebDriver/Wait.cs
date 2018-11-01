@@ -91,7 +91,7 @@ namespace SmartWebDriver
 
             if (!response.PassFailResult)
             {
-                var timeElapsed = $"{ Math.Round(stopWatch.Elapsed.TotalMinutes, 0)}m, {stopWatch.Elapsed.Seconds}s";
+                var timeElapsed = $"{ Math.Floor(stopWatch.Elapsed.TotalMinutes)}m, {stopWatch.Elapsed.Seconds}s";
                 throw new Exception(
                     $"Waited {timeElapsed} for the condition to be met, but it wasn't.\nError thrown: {response.GetMessages}");
             }
@@ -127,7 +127,7 @@ namespace SmartWebDriver
 
             if (!response.PassFailResult)
             {
-                var timeElapsed = $"{ Math.Round(stopWatch.Elapsed.TotalMinutes, 0)}m, {stopWatch.Elapsed.Seconds}s";
+                var timeElapsed = $"{ Math.Floor(stopWatch.Elapsed.TotalMinutes)}m, {stopWatch.Elapsed.Seconds}s";
                 throw new Exception(
                     $"I expected the condition to be met, and hold true, for {_timeout.TotalSeconds} seconds, but it failed after: {timeElapsed}.\nI got this error {response.GetMessages}");
             }
