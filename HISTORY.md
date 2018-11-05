@@ -8,3 +8,5 @@
 - Expanding the browser functions for angular interactions and a custom deletion
 # 1.0.5 - 31 Oct 2018
 - Fixing the error messaging on how long the timeouts have waited for a condition
+# 1.0.6 - 5 Nov 2018
+- Rounding error on reporting timeouts. Improving wording of waiting for angular requests to stop

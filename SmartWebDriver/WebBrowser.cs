@@ -495,7 +495,7 @@ namespace SmartWebDriver
             _webdriver.Navigate().Back();
         }
 
-        private static bool IsAngularSleeping(IWebDriver driver, string cssSelector)
+        private static bool DoesElementHaveNoOutstandingAngularRequests(IWebDriver driver, string cssSelector)
         {
             var executor = driver as IJavaScriptExecutor;
 
@@ -976,16 +976,15 @@ namespace SmartWebDriver
             });
         }
 
-        public void WaitForAngular(PageElement pageElement)
+        public void WaitForAngularRequestsToStop(PageElement pageElement)
         {
             if (pageElement.Css == null)
             {
                 throw new Exception("Unable to wait for angular on '" + pageElement.Description +
                                     "' since it doesn't have a css selector value");
             }
-            Wait.UpTo(15.Seconds()).For(() => new TestResponse(IsAngularSleeping(_webdriver, pageElement.Css),
-                    "Tried to check if the cssSelector for '" + pageElement.Description + "' is Angular: " +
-                    pageElement.Css + ",\n\nbut got an error"));
+            Wait.UpTo(30.Seconds()).For(() => new TestResponse(DoesElementHaveNoOutstandingAngularRequests(_webdriver, pageElement.Css),
+                    "Tried to wait for the element: " + pageElement.Description + "' to have no more angular requests but it was still busy. Consider increasing the timeout or checking network speed."));
         }
 
         /// <summary>
