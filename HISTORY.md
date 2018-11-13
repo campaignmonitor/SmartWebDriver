@@ -10,3 +10,5 @@
 - Fixing the error messaging on how long the timeouts have waited for a condition
 # 1.0.6 - 5 Nov 2018
 - Rounding error on reporting timeouts. Improving wording of waiting for angular requests to stop
+# 1.0.7 - 13 Nov 2018
+- Updating the Select method to have a short wait for the Select options to be populated before trying to select one of them

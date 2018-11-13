@@ -730,6 +730,8 @@ namespace SmartWebDriver
             var webElement = GetElement(pageElement);
 
             var selectElement = new SelectElement(webElement);
+            Wait.UpTo(10.Seconds()).For(() =>
+                new TestResponse(selectElement.Options.Count > 0, $"Expected the Select element '{pageElement.Description}' to have at least 1 option, so i could select '{optionToSelect}' but it had none available"));
             try
             {
                 selectElement.SelectByText(optionToSelect, partialMatch);
