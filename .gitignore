@@ -1,6 +1,6 @@
 *.user
-SmartWebDriver/.vs/
-SmartWebDriver/bin/
-SmartWebDriver/obj/
-SmartWebDriver/packages/
+*/.vs/
+*/bin/
+*/obj/
+*/packages/
 *.nupkg

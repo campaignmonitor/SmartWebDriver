@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2047
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWebDriver", "SmartWebDriver.csproj", "{6DEF62F2-E672-475D-A6DE-299257D4C756}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sandbox", "..\Sandbox\Sandbox.csproj", "{DBFFA5DB-EF51-4AF6-ADFC-4FED600FDCE4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +17,15 @@ Global
 		{6DEF62F2-E672-475D-A6DE-299257D4C756}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6DEF62F2-E672-475D-A6DE-299257D4C756}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6DEF62F2-E672-475D-A6DE-299257D4C756}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBFFA5DB-EF51-4AF6-ADFC-4FED600FDCE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBFFA5DB-EF51-4AF6-ADFC-4FED600FDCE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBFFA5DB-EF51-4AF6-ADFC-4FED600FDCE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBFFA5DB-EF51-4AF6-ADFC-4FED600FDCE4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F42603FA-873B-4ECD-87B3-B98FA849C253}
 	EndGlobalSection
 EndGlobal

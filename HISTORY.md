@@ -12,3 +12,5 @@
 - Rounding error on reporting timeouts. Improving wording of waiting for angular requests to stop
 # 1.0.7 - 13 Nov 2018
 - Updating the Select method to have a short wait for the Select options to be populated before trying to select one of them
+# 1.0.8 - 22 Nov 2018
+- Adding a check to only allow 1 selector per PageElement. Adding a Sandbox test project and improving documentation

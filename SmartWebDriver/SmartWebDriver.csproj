@@ -58,7 +58,9 @@
     <Compile Include="WebBrowser.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Drivers\chromedriver.exe" />
+    <Content Include="Drivers\chromedriver.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -16,7 +16,8 @@ Run `Install-Package smartwebdriver` from the Package Manager Console in Visual 
 
 ## How to use
 
-We recommend using the PageObject model approach to developing your tests. See below for an example Page model, and Test, using the SmartWebDriver code for testing a LogIn page.
+We recommend using the PageObject model approach to developing your tests. 
+See below for an example Page model, and Test, using the SmartWebDriver code for testing a LogIn page.
 
 ### LoginPage.cs
 ```
@@ -97,6 +98,10 @@ namespace TestProject.Tests
 ```
 Further examples will be added over time.
 
+## Browser support
+
+Currently, only the ChromeDriver is supported, however other drivers can be added if sufficient requests. The ChromeDriver.exe file is included in the repo under `/drivers` so that it will automatically be included in all your test projects. The SmartWebDriver code expects to find the `.exe` file in the `/drivers` folder of the output directory, so make sure your `ChromeDriver.exe` file is set to copy to the output directory so the test can access it.
+
 ## Contributing
 
 Please read [CONTRIBUTING.md](https://github.com/campaignmonitor/smartwebdriver/blob/master/CONTRIBUTING.md) for guidelines for contributing to this repository.
@@ -104,3 +109,7 @@ Please read [CONTRIBUTING.md](https://github.com/campaignmonitor/smartwebdriver/
 ## Authors
 
 See the list of [contributors](https://github.com/campaignmonitor/SmartWebDriver/graphs/contributors) who participated in this project.
+
+## Intended usage
+
+This project is intended for regression testing an application where you control all the inputs and usage. If you open up inputs for external usage, be careful you don't open yourself up for malicious attacks, such as SSRF.

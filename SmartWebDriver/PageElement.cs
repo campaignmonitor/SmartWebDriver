@@ -1,4 +1,6 @@
-﻿namespace SmartWebDriver
+﻿using System;
+
+namespace SmartWebDriver
 {
     public class PageElement
     {
@@ -8,7 +10,23 @@
         }
 
         public string Description;
-        public ElementLocators LocatorUsed;
+        private ElementLocators _locatorUsed = ElementLocators.None;
+        public ElementLocators LocatorUsed
+        {
+            get { return _locatorUsed; }
+            set
+            {
+                // make sure we aren't trying to set the locator more than once
+                if (_locatorUsed == ElementLocators.None)
+                {
+                    _locatorUsed = value;
+                }
+                else
+                {
+                    throw new Exception("You can only set 1 locator for a page element");
+                }
+            }
+        }
 
         private string _id;
         private string _name;
