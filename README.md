@@ -113,3 +113,7 @@ See the list of [contributors](https://github.com/campaignmonitor/SmartWebDriver
 ## Intended usage
 
 This project is intended for regression testing an application where you control all the inputs and usage. If you open up inputs for external usage, be careful you don't open yourself up for malicious attacks, such as SSRF.
+
+## License
+
+See the [LICENSE](LICENSE) file for license rights and limitations (MIT).
