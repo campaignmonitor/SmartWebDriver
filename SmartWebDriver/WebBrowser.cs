@@ -753,8 +753,16 @@ namespace SmartWebDriver
             var webElement = GetElement(pageElement);
             try
             {
-                webElement.Click();
-                Thread.Sleep(500.Milliseconds());
+                try
+                {
+                    // some page elements may not be directly clickable, and already have focus, so don't fail on this
+                    webElement.Click();
+                    Thread.Sleep(500.Milliseconds());
+                }
+                catch (Exception e)
+                {
+                    Log($"Tried to click on '{pageElement.Description}' in order to clear it, but the click failed. Continuing.\nException details: {e.Message}");
+                }
                 var action = new Actions(_webdriver)
                     .KeyDown(Keys.Control)
                     .SendKeys("a")
