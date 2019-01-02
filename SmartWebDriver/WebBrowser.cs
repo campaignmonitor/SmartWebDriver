@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SmartWebDriver.Extensions;
@@ -32,7 +33,7 @@ namespace SmartWebDriver
                 Path.GetDirectoryName(
                     Uri.UnescapeDataString(new UriBuilder(Assembly.GetExecutingAssembly().CodeBase).Path)) +
                 @"\Drivers";
-            StartWebbrowser(driverDirectory, browserOptions);
+            StartWebbrowser(driverDirectory, browserOptions ?? new BrowserOptions());
         }
 
         public WebBrowser(string path, BrowserOptions browserOptions)
@@ -42,23 +43,27 @@ namespace SmartWebDriver
 
         private void StartWebbrowser(string path, BrowserOptions browerOptions)
         {
-            var chromeOptions = new ChromeOptions();
-            chromeOptions.AddArgument("--dns-prefetch-disable");
-            chromeOptions.AddArgument("start-maximized");
-            chromeOptions.AddArgument("test-type");
-            if (browerOptions != null)
+            switch (browerOptions.BrowserType)
             {
-                if (browerOptions.RunInIncognito)
-                {
-                    // opens a private browser window, immune to cookies of other open windows (unless also private)
-                    chromeOptions.AddArgument("--incognito");
-                }
-                if (browerOptions.AllowInsecureContent)
-                {
-                    chromeOptions.AddArgument("--allow-running-insecure-content");
-                }
+                case (Browsers.Chrome):
+                    var chromeOptions = new ChromeOptions();
+                    chromeOptions.AddArguments("--dns-prefetch-disable", "start-maximized", "test-type");
+                        if (browerOptions.RunInIncognito)
+                        {
+                            // opens a private browser window, immune to cookies of other open windows (unless also private)
+                            chromeOptions.AddArgument("--incognito");
+                        }
+                        if (browerOptions.AllowInsecureContent)
+                        {
+                            chromeOptions.AddArgument("--allow-running-insecure-content");
+                        }
+                    _webdriver = new ChromeDriver(path, chromeOptions);
+                    break;
+                case (Browsers.Firefox):
+                    _webdriver = new FirefoxDriver(path);
+                    _webdriver.Manage().Window.Maximize();
+                    break;
             }
-            _webdriver = new ChromeDriver(path, chromeOptions);
         }
 
         public void AcceptAlert()
@@ -606,6 +611,10 @@ namespace SmartWebDriver
                 {
                     throw;
                 }
+            }
+            catch (WebDriverException wde)
+            {
+                throw new Exception($"Tried to navigate to '{url}' but got an exception", wde);
             }
         }
 

@@ -20,7 +20,9 @@ namespace Sandbox
         [Test]
         public void SampleTest()
         {
-            _browser = new WebBrowser();
+            _browser = new WebBrowser(new BrowserOptions(Browsers.Firefox));
+            _browser.NavigateTo("http://www.google.com");
+
         }
     }
 }

@@ -16,3 +16,5 @@
 - Adding a check to only allow 1 selector per PageElement. Adding a Sandbox test project and improving documentation
 # 1.0.9 - 19 Dec 2018
 - Updating browser method 'SelectAllThenDelete()' to handle the inner click method failing if element doesn't allow a click 
+# 1.0.10 - 3 Jan 2019
+- Added support for Firefox driver and improve App description
