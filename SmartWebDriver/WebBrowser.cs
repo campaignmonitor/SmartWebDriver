@@ -710,6 +710,37 @@ namespace SmartWebDriver
                 // ignore this error, and try to proceed anyway
             }
         }
+        
+        public void RightClick(PageElement pageElement, bool scrollIntoViewBeforeClick = true)
+        {
+            // Adding a micro sleep to provide a little more robustness before trying to execute a click
+            Thread.Sleep(200);
+
+            var webElement = GetElement(pageElement);
+            if (scrollIntoViewBeforeClick)
+            {
+                ScrollIntoView(webElement);
+            }
+            RightClick(webElement, pageElement.Description);
+        }
+
+        /// <summary>
+        /// Right click the web element previously found by using a PageElement reference
+        /// </summary>
+        /// <param name="webElement"></param>
+        /// <param name="description"></param>
+        public void RightClick(IWebElement webElement, string description)
+        {
+            try
+            {
+                var actions = new Actions(_webdriver);
+                actions.ContextClick(webElement).Build().Perform();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Attempted to right click the element '" + description + "' but failed", e);
+            }
+        }
 
         public void ScrollIntoView(PageElement pageElement, bool alignToTop = false)
         {
