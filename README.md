@@ -1,4 +1,4 @@
-# SmartWebDriver
+# SmartWebDriver [![Build Status](https://travis-ci.com/campaignmonitor/SmartWebDriver.svg?branch=master)](https://travis-ci.com/campaignmonitor/SmartWebDriver)
 Smart extensions for Selenium.WebDriver. This wrapper is intended to extend upon the built-in browser functions to add logging, retry functionality, better error logging and generally simplify the code required for interacting with the browser, while also making it more powerful.
 
 ## Getting Started
