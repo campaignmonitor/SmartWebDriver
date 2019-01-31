@@ -18,3 +18,5 @@
 - Updating browser method 'SelectAllThenDelete()' to handle the inner click method failing if element doesn't allow a click 
 # 1.0.10 - 3 Jan 2019
 - Added support for Firefox driver and improve App description
+# 1.0.11 - 30 Jan 2019
+- Added RightClick() method
