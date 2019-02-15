@@ -742,6 +742,34 @@ namespace SmartWebDriver
             }
         }
 
+        public void DragAndDrop(PageElement elementToDrag, PageElement targetElement)
+        {
+            var webElementToDrag = GetElement(elementToDrag);
+            var targetWebElement = GetElement(targetElement);
+
+            DragAndDrop(webElementToDrag, elementToDrag.Description, targetWebElement, targetElement.Description);
+        }
+
+        /// <summary>
+        /// Drag and Drop previously found Element to previously found target element.
+        /// </summary>
+        /// <param name="elementToDrag"></param>
+        /// <param name="elementToDragDescription"></param>
+        /// <param name="targetElement"></param>
+        /// <param name="targetElementDescription"></param>
+        public void DragAndDrop(IWebElement elementToDrag, string elementToDragDescription, IWebElement targetElement, string targetElementDescription)
+        {
+            try
+            {
+                var actions = new Actions(_webdriver);
+                actions.DragAndDrop(elementToDrag, targetElement).Build().Perform();
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Attempted to drag and drop '{elementToDragDescription}' to '{targetElementDescription}' but failed", e);
+            }
+        }
+
         public void ScrollIntoView(PageElement pageElement, bool alignToTop = false)
         {
             var webElement = GetElement(pageElement);
