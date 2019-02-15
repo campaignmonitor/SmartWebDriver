@@ -741,7 +741,11 @@ namespace SmartWebDriver
                 throw new Exception("Attempted to right click the element '" + description + "' but failed", e);
             }
         }
-
+        /// <summary>
+        /// Drag and Drop PageElement to target PageElement
+        /// </summary>
+        /// <param name="elementToDrag"></param>
+        /// <param name="targetElement"></param>
         public void DragAndDrop(PageElement elementToDrag, PageElement targetElement)
         {
             var webElementToDrag = GetElement(elementToDrag);
