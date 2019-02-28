@@ -66,12 +66,12 @@ namespace SmartWebDriver
             }
         }
 
-        public void AcceptAlert()
+        public virtual void AcceptAlert()
         {
             _webdriver.SwitchTo().Alert().Accept();
         }
 
-        public void CaptureWebPageToFile(string filePath)
+        public virtual void CaptureWebPageToFile(string filePath)
         {
             try
             {
@@ -175,7 +175,7 @@ namespace SmartWebDriver
             }
         }
 
-        public void Check(PageElement pageElement)
+        public virtual void Check(PageElement pageElement)
         {
             WaitForAny(pageElement, 30.Seconds());
             var element = GetElement(pageElement);
@@ -186,7 +186,7 @@ namespace SmartWebDriver
             }
         }
 
-        public void Clear(PageElement pageElement)
+        public virtual void Clear(PageElement pageElement)
         {
             var element = GetElement(pageElement);
             try
@@ -202,7 +202,7 @@ namespace SmartWebDriver
             }
         }
 
-        public void Click(PageElement pageElement, bool scrollIntoViewBeforeClick = true)
+        public virtual void Click(PageElement pageElement, bool scrollIntoViewBeforeClick = true)
         {
             // Adding a micro sleep to provide a little more robustness before trying to execute a click
             Thread.Sleep(200);
@@ -220,7 +220,7 @@ namespace SmartWebDriver
         /// </summary>
         /// <param name="webElement"></param>
         /// <param name="description"></param>
-        public void Click(IWebElement webElement, string description)
+        public virtual void Click(IWebElement webElement, string description)
         {
             try
             {
@@ -242,17 +242,17 @@ namespace SmartWebDriver
         /// <summary>
         /// Close the current window, and quit the browser if no windows left
         /// </summary>
-        public void Close()
+        public virtual void Close()
         {
             _webdriver.Close();
         }
 
-        public void DismissAlert()
+        public virtual void DismissAlert()
         {
             _webdriver.SwitchTo().Alert().Dismiss();
         }
 
-        public void EnterText(PageElement pageElement, string text)
+        public virtual void EnterText(PageElement pageElement, string text)
         {
             var webElement = GetElement(pageElement);
             try
@@ -268,12 +268,12 @@ namespace SmartWebDriver
             }
         }
 
-        public void ExecuteScript(string script, params object[] args)
+        public virtual void ExecuteScript(string script, params object[] args)
         {
             ((IJavaScriptExecutor) _webdriver).ExecuteScript(script, args);
         }
 
-        public bool Exists(PageElement pageElement)
+        public virtual bool Exists(PageElement pageElement)
         {
             try
             {
@@ -286,7 +286,7 @@ namespace SmartWebDriver
             }
         }
 
-        public void FileUpload(PageElement pageElement, string filePath)
+        public virtual void FileUpload(PageElement pageElement, string filePath)
         {
             var webElement = GetElement(pageElement);
             try
@@ -305,7 +305,7 @@ namespace SmartWebDriver
             return GetElements(pageElement);
         }
 
-        public string GetAttributeValue(PageElement pageElement, string attributeName)
+        public virtual string GetAttributeValue(PageElement pageElement, string attributeName)
         {
             var webElement = GetElement(pageElement);
             try
@@ -383,7 +383,7 @@ namespace SmartWebDriver
             }
         }
 
-        public string GetInnerHtml(PageElement pageElement)
+        public virtual string GetInnerHtml(PageElement pageElement)
         {
             return GetAttributeValue(pageElement, "innerHTML");
         }
@@ -401,7 +401,7 @@ namespace SmartWebDriver
         /// Get the Text within the body of the HTML page
         /// </summary>
         /// <returns>Text of the HTML page</returns>
-        public string GetPageBodyText()
+        public virtual string GetPageBodyText()
         {
             try
             {
@@ -420,7 +420,7 @@ namespace SmartWebDriver
         /// Get the full html source of the page
         /// </summary>
         /// <returns></returns>
-        public string GetPageSource()
+        public virtual string GetPageSource()
         {
             return _webdriver.PageSource;
         }
@@ -437,7 +437,7 @@ namespace SmartWebDriver
             return webElementsFound.ElementAt(sectionIndex);
         }
 
-        public List<string> GetSelectedOptions(PageElement pageElement)
+        public virtual List<string> GetSelectedOptions(PageElement pageElement)
         {
             var webElement = GetElement(pageElement);
             try
@@ -454,7 +454,7 @@ namespace SmartWebDriver
             }
         }
 
-        public List<string> GetSelectOptions(PageElement pageElement)
+        public virtual List<string> GetSelectOptions(PageElement pageElement)
         {
             WaitForAny(pageElement, 30.Seconds());
             var webElement = GetElement(pageElement);
@@ -471,7 +471,7 @@ namespace SmartWebDriver
             }
         }
 
-        public string GetText(PageElement pageElement)
+        public virtual string GetText(PageElement pageElement)
         {
             var webElement = GetElement(pageElement);
             try
@@ -485,17 +485,17 @@ namespace SmartWebDriver
             }
         }
 
-        public string GetTitle()
+        public virtual string GetTitle()
         {
             return _webdriver.Title;
         }
 
-        public string GetUrl()
+        public virtual string GetUrl()
         {
             return _webdriver.Url;
         }
 
-        public void GoBack()
+        public virtual void GoBack()
         {
             _webdriver.Navigate().Back();
         }
@@ -528,7 +528,7 @@ namespace SmartWebDriver
             return done;
         }
 
-        public bool IsEnabled(PageElement pageElement)
+        public virtual bool IsEnabled(PageElement pageElement)
         {
             var webElement = GetElement(pageElement);
             try
@@ -542,7 +542,7 @@ namespace SmartWebDriver
             }
         }
 
-        public bool IsSelected(PageElement pageElement)
+        public virtual bool IsSelected(PageElement pageElement)
         {
             var webElement = GetElement(pageElement);
             try
@@ -557,7 +557,7 @@ namespace SmartWebDriver
             }
         }
 
-        public bool IsVisible(PageElement pageElement)
+        public virtual bool IsVisible(PageElement pageElement)
         {
             try
             {
@@ -571,13 +571,13 @@ namespace SmartWebDriver
             }
         }
 
-        public void JavascriptClick(PageElement pageElement)
+        public virtual void JavascriptClick(PageElement pageElement)
         {
             var webElement = GetElement(pageElement);
             JavascriptClick(webElement);
         }
 
-        public void JavascriptClick(IWebElement webElement)
+        public virtual void JavascriptClick(IWebElement webElement)
         {
             try
             {
@@ -595,7 +595,7 @@ namespace SmartWebDriver
             Console.WriteLine(time + ": " + message);
         }
 
-        public void NavigateTo(string url)
+        public virtual void NavigateTo(string url)
         {
             try
             {
@@ -623,7 +623,7 @@ namespace SmartWebDriver
         /// </summary>
         /// <param name="url">The URL to navigate to</param>
         /// <param name="expectedRedirectUrl">The URL that you should be redirected to</param>
-        public void NavigateToAndConfirmRedirect(string url, string expectedRedirectUrl)
+        public virtual void NavigateToAndConfirmRedirect(string url, string expectedRedirectUrl)
         {
             var timeout = 30.Seconds();
             try
@@ -655,7 +655,7 @@ namespace SmartWebDriver
             }
         }
 
-        public void PressEnter(PageElement pageElement)
+        public virtual void PressEnter(PageElement pageElement)
         {
             var webElement = GetElement(pageElement);
             try
@@ -670,12 +670,12 @@ namespace SmartWebDriver
             }
         }
 
-        public void PressEscape()
+        public virtual void PressEscape()
         {
             new Actions(_webdriver).SendKeys(Keys.Escape).Build().Perform();
         }
 
-        public void PressTab(PageElement pageElement)
+        public virtual void PressTab(PageElement pageElement)
         {
             var webElement = GetElement(pageElement);
             try
@@ -693,12 +693,12 @@ namespace SmartWebDriver
         /// <summary>
         /// Close the driver and every associated window
         /// </summary>
-        public void Quit()
+        public virtual void Quit()
         {
             _webdriver.Quit();
         }
 
-        public void Refresh()
+        public virtual void Refresh()
         {
             try
             {
@@ -711,7 +711,7 @@ namespace SmartWebDriver
             }
         }
         
-        public void RightClick(PageElement pageElement, bool scrollIntoViewBeforeClick = true)
+        public virtual void RightClick(PageElement pageElement, bool scrollIntoViewBeforeClick = true)
         {
             // Adding a micro sleep to provide a little more robustness before trying to execute a click
             Thread.Sleep(200);
@@ -729,7 +729,7 @@ namespace SmartWebDriver
         /// </summary>
         /// <param name="webElement"></param>
         /// <param name="description"></param>
-        public void RightClick(IWebElement webElement, string description)
+        public virtual void RightClick(IWebElement webElement, string description)
         {
             try
             {
@@ -746,7 +746,7 @@ namespace SmartWebDriver
         /// </summary>
         /// <param name="elementToDrag"></param>
         /// <param name="targetElement"></param>
-        public void DragAndDrop(PageElement elementToDrag, PageElement targetElement)
+        public virtual void DragAndDrop(PageElement elementToDrag, PageElement targetElement)
         {
             var webElementToDrag = GetElement(elementToDrag);
             var targetWebElement = GetElement(targetElement);
@@ -761,7 +761,7 @@ namespace SmartWebDriver
         /// <param name="elementToDragDescription"></param>
         /// <param name="targetElement"></param>
         /// <param name="targetElementDescription"></param>
-        public void DragAndDrop(IWebElement elementToDrag, string elementToDragDescription, IWebElement targetElement, string targetElementDescription)
+        public virtual void DragAndDrop(IWebElement elementToDrag, string elementToDragDescription, IWebElement targetElement, string targetElementDescription)
         {
             try
             {
@@ -774,7 +774,7 @@ namespace SmartWebDriver
             }
         }
 
-        public void ScrollIntoView(PageElement pageElement, bool alignToTop = false)
+        public virtual void ScrollIntoView(PageElement pageElement, bool alignToTop = false)
         {
             var webElement = GetElement(pageElement);
             ScrollIntoView(webElement, alignToTop);
@@ -796,7 +796,7 @@ namespace SmartWebDriver
         /// <summary>
         /// Select option <paramref name="optionToSelect"/> from the drop down element <paramref name="pageElement"/>
         /// </summary>
-        public void Select(PageElement pageElement, string optionToSelect, bool partialMatch = false)
+        public virtual void Select(PageElement pageElement, string optionToSelect, bool partialMatch = false)
         {
             WaitForAny(pageElement, 30.Seconds());
             var webElement = GetElement(pageElement);
@@ -820,7 +820,7 @@ namespace SmartWebDriver
         /// Clear out a textbox by using Ctrl+A, Delete. Particularly useful for custom editors/inputs
         /// </summary>
         /// <param name="pageElement"></param>
-        public void SelectAllThenDelete(PageElement pageElement)
+        public virtual void SelectAllThenDelete(PageElement pageElement)
         {
             var webElement = GetElement(pageElement);
             try
@@ -849,12 +849,33 @@ namespace SmartWebDriver
             }
         }
 
+        /// <summary
+        /// Move mouse to the given page element to trigger hover events
+        /// </summary
+        /// <param name="pageElement"></param>
+        public virtual void Hover(PageElement pageElement)
+        {
+            var webElement = GetElement(pageElement);
+            Hover(webElement);
+        }
+
+        /// <summary
+        /// Move mouse to the given element to trigger hover events
+        /// </summary
+        /// <param name="element"></param>
+        public virtual void Hover(IWebElement element)
+        {
+            var action = new Actions(_webdriver)
+                .MoveToElement(element);
+            action.Build().Perform();
+        }
+
         /// <summary>
         /// Send the provided keys to the given element
         /// </summary>
         /// <param name="pageElement"></param>
         /// <param name="text"></param>
-        public void SendKeys(PageElement pageElement, string text)
+        public virtual void SendKeys(PageElement pageElement, string text)
         {
             var webElement = GetElement(pageElement);
             try
@@ -873,7 +894,7 @@ namespace SmartWebDriver
         /// Send the provided keys straight to the DOM, not a particular element
         /// </summary>
         /// <param name="text"></param>
-        public void SendKeys(string text)
+        public virtual void SendKeys(string text)
         {
             try
             {
@@ -886,7 +907,7 @@ namespace SmartWebDriver
             }
         }
 
-        public void SendKeysOneCharAtATime(string text)
+        public virtual void SendKeysOneCharAtATime(string text)
         {
             try
             {
@@ -899,7 +920,7 @@ namespace SmartWebDriver
             }
         }
 
-        public void SetAttributeValue(PageElement pageElement, string attribute, string value)
+        public virtual void SetAttributeValue(PageElement pageElement, string attribute, string value)
         {
             var webElement = GetElement(pageElement);
             ExecuteScript("arguments[0].setAttribute(arguments[1], arguments[2]);", webElement, attribute, value);
@@ -910,7 +931,7 @@ namespace SmartWebDriver
         /// </summary>
         /// <param name="pageElement"></param>
         /// <param name="text"></param>
-        public void SetText(PageElement pageElement, string text)
+        public virtual void SetText(PageElement pageElement, string text)
         {
             SetAttributeValue(pageElement, "value", text);
         }
@@ -921,7 +942,7 @@ namespace SmartWebDriver
         /// </summary>
         /// <param name="pageElement"></param>
         /// <param name="timeout"></param>
-        public void SilentWaitForVisible(PageElement pageElement, TimeSpan timeout)
+        public virtual void SilentWaitForVisible(PageElement pageElement, TimeSpan timeout)
         {
             var stopWatch = new Stopwatch();
             stopWatch.Start();
@@ -937,12 +958,12 @@ namespace SmartWebDriver
             stopWatch.Stop();
         }
 
-        public void SwitchToDefaultFrame()
+        public virtual void SwitchToDefaultFrame()
         {
             _webdriver.SwitchTo().DefaultContent();
         }
 
-        public void SwitchToIFrame(int iFrameIndex)
+        public virtual void SwitchToIFrame(int iFrameIndex)
         {
             var desiredCount = iFrameIndex + 1;
             var iFrameElement = new PageElement("Iframe") { Css = "iframe" };
@@ -957,7 +978,7 @@ namespace SmartWebDriver
             _webdriver.SwitchTo().Frame(iFrameIndex);
         }
 
-        public void SwitchToIFrame(PageElement pageElement)
+        public virtual void SwitchToIFrame(PageElement pageElement)
         {
             WaitForAny(pageElement, 30.Seconds());
             var webElement = GetElement(pageElement);
@@ -968,7 +989,7 @@ namespace SmartWebDriver
         /// Wait for the given tab index to exist and then switches to it
         /// </summary>
         /// <param name="tabIndex"></param>
-        public void SwitchToTab(int tabIndex)
+        public virtual void SwitchToTab(int tabIndex)
         {
             var wait = new WebDriverWait(_webdriver, 30.Seconds());
             wait.Until(d => tabIndex + 1 <= d.WindowHandles.Count);
@@ -980,7 +1001,7 @@ namespace SmartWebDriver
         /// </summary>
         /// <param name="causePopupAction">The action that causes the pop up to open</param>
         /// <param name="inPopupActivityAction">Any action you'd like to to do within the pop up - for example any further data entry and assertions</param>
-        public void TriggerPopupAndPerformActionWithinIt(Action causePopupAction, Action inPopupActivityAction)
+        public virtual void TriggerPopupAndPerformActionWithinIt(Action causePopupAction, Action inPopupActivityAction)
         {
             var currentWindowHandle = _webdriver.CurrentWindowHandle;
             var originalWindowHandles = _webdriver.WindowHandles;
@@ -1010,7 +1031,7 @@ namespace SmartWebDriver
             _webdriver.SwitchTo().Window(currentWindowHandle);
         }
 
-        public void Uncheck(PageElement pageElement)
+        public virtual void Uncheck(PageElement pageElement)
         {
             var webElement = GetElement(pageElement);
 
@@ -1046,7 +1067,7 @@ namespace SmartWebDriver
         /// <param name="pageElement"></param>
         /// <param name="styleProperty"></param>
         /// <param name="desiredValues"></param>
-        public void WaitForACssStyleValue(PageElement pageElement, string styleProperty,
+        public virtual void WaitForACssStyleValue(PageElement pageElement, string styleProperty,
             params string[] desiredValues)
         {
             var webElement = GetElement(pageElement);
@@ -1058,7 +1079,7 @@ namespace SmartWebDriver
             });
         }
 
-        public void WaitForAngularRequestsToStop(PageElement pageElement)
+        public virtual void WaitForAngularRequestsToStop(PageElement pageElement)
         {
             if (pageElement.Css == null)
             {
@@ -1075,7 +1096,7 @@ namespace SmartWebDriver
         /// <param name="element"></param>
         /// <param name="timeout"></param>
         /// <returns></returns>
-        public void WaitForAny(PageElement element, TimeSpan timeout)
+        public virtual void WaitForAny(PageElement element, TimeSpan timeout)
         {
             var searchContext = GetElementFinder(element, out _);
             try
@@ -1090,7 +1111,7 @@ namespace SmartWebDriver
             }
         }
 
-        public void WaitForClassNotContains(IWebElement webElement, string nonDesiredClass)
+        public virtual void WaitForClassNotContains(IWebElement webElement, string nonDesiredClass)
         {
             Wait.UpTo(10.Seconds()).For(() =>
             {
@@ -1106,14 +1127,14 @@ namespace SmartWebDriver
         /// <param name="pageElement"></param>
         /// <param name="styleProperty"></param>
         /// <param name="desiredValue"></param>
-        public void WaitForCssStyleValue(PageElement pageElement, string styleProperty, string desiredValue)
+        public virtual void WaitForCssStyleValue(PageElement pageElement, string styleProperty, string desiredValue)
         {
             var webElement = GetElement(pageElement);
             Wait.UpTo(10.Seconds()).For(() => new TestResponse(desiredValue, webElement.GetCssValue(styleProperty),
                 $"Failed to wait for the '{pageElement.Description}' element to have the expected value in the '{styleProperty}' property"));
         }
 
-        public void WaitForCssStyleValuesNotPresent(PageElement pageElement, string styleProperty,
+        public virtual void WaitForCssStyleValuesNotPresent(PageElement pageElement, string styleProperty,
             params string[] nonDesiredValues)
         {
             var webElement = GetElement(pageElement);
@@ -1126,7 +1147,7 @@ namespace SmartWebDriver
             });
         }
 
-        public void WaitForDisabled(PageElement pageElement, TimeSpan timeout)
+        public virtual void WaitForDisabled(PageElement pageElement, TimeSpan timeout)
         {
             WaitForAny(pageElement, timeout);
             var webElement = GetElement(pageElement);
@@ -1134,7 +1155,7 @@ namespace SmartWebDriver
                 new TestResponse(!webElement.Enabled, $"Failed waiting for '{pageElement.Description}' to be disabled"));
         }
 
-        public void WaitForEnabled(PageElement pageElement, TimeSpan timeout)
+        public virtual void WaitForEnabled(PageElement pageElement, TimeSpan timeout)
         {
             WaitForAny(pageElement, timeout);
             var webElement = GetElement(pageElement);
@@ -1142,13 +1163,13 @@ namespace SmartWebDriver
                 new TestResponse(webElement.Enabled, $"Failed waiting for '{pageElement.Description}' to be enabled"));
         }
 
-        public void WaitForExists(PageElement pageElement, TimeSpan timeout)
+        public virtual void WaitForExists(PageElement pageElement, TimeSpan timeout)
         {
             Wait.UpTo(timeout).For(() => new TestResponse(Exists(pageElement),
                 $"'{pageElement.Description}' doesn't exist, waited {timeout.TotalSeconds} seconds"));
         }
 
-        public void WaitForLocatedOnScreen(IWebElement webElement, string elementDescription)
+        public virtual void WaitForLocatedOnScreen(IWebElement webElement, string elementDescription)
         {
             Wait.UpTo(10.Seconds()).For(() =>
             {
@@ -1158,21 +1179,21 @@ namespace SmartWebDriver
             });
         }
 
-        public void WaitForLocatedOnScreen(PageElement pageElement, TimeSpan timeout = default(TimeSpan))
+        public virtual void WaitForLocatedOnScreen(PageElement pageElement, TimeSpan timeout = default(TimeSpan))
         {
             WaitForAny(pageElement, timeout == default(TimeSpan)? 30.Seconds() : timeout);
             var webElement = GetElement(pageElement);
             WaitForLocatedOnScreen(webElement, pageElement.Description);
         }
 
-        public void WaitForNotVisible(PageElement pageElement, TimeSpan timeout = default(TimeSpan))
+        public virtual void WaitForNotVisible(PageElement pageElement, TimeSpan timeout = default(TimeSpan))
         {
             Wait.UpTo(timeout == default(TimeSpan) ? 30.Seconds() : timeout).For(() =>
                 new TestResponse(!IsVisible(pageElement),
                     $"Waited for the '{pageElement.Description}' element to disappear but it didn't"));
         }
 
-        public void WaitForPageLoad()
+        public virtual void WaitForPageLoad()
         {
             try
             {
@@ -1185,7 +1206,7 @@ namespace SmartWebDriver
             }
         }
 
-        public void WaitForText(PageElement pageElement, string text, TimeSpan timeout)
+        public virtual void WaitForText(PageElement pageElement, string text, TimeSpan timeout)
         {
             WaitForExists(pageElement, timeout);
             var webElement = GetElement(pageElement);
@@ -1201,7 +1222,7 @@ namespace SmartWebDriver
             }
         }
 
-        public void WaitForTitle(String title, TimeSpan timeout)
+        public virtual void WaitForTitle(String title, TimeSpan timeout)
         {
             var wait = new WebDriverWait(_webdriver, timeout);
             try
@@ -1216,7 +1237,7 @@ namespace SmartWebDriver
             }
         }
 
-        public void WaitForUrl(string partialUrl, TimeSpan timeout)
+        public virtual void WaitForUrl(string partialUrl, TimeSpan timeout)
         {
             var wait = new WebDriverWait(_webdriver, timeout);
             try
@@ -1239,13 +1260,13 @@ namespace SmartWebDriver
             }
         }
 
-        public void WaitForVisible(PageElement pageElement, TimeSpan timeout)
+        public virtual void WaitForVisible(PageElement pageElement, TimeSpan timeout)
         {
             Wait.UpTo(timeout).For(() => new TestResponse(IsVisible(pageElement),
                 $"Failed to wait for the element '{pageElement.Description}' to be visible"));
         }
 
-        public void WaitWhileEnsuringNotVisible(PageElement pageElement, TimeSpan timeout = default(TimeSpan))
+        public virtual void WaitWhileEnsuringNotVisible(PageElement pageElement, TimeSpan timeout = default(TimeSpan))
         {
             Wait.UpTo(timeout == default(TimeSpan) ? 30.Seconds() : timeout).WhileEnsuring(() =>
                 new TestResponse(!IsVisible(pageElement),
