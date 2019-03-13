@@ -17,7 +17,9 @@ namespace SmartWebDriver
         public TestResponse(bool result, string message)
         {
             PassFailResult = result;
-            Messages = new List<string> { message };
+            Messages = PassFailResult
+                           ? new List<string>()
+                           : new List<string> { message };
         }
         /// <summary>
         /// For testing two strings are equal

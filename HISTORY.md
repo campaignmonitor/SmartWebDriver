@@ -20,3 +20,8 @@
 - Added support for Firefox driver and improve App description
 # 1.0.11 - 30 Jan 2019
 - Added RightClick() method
+# 1.0.12 - 13 Mar 2019
+- Fixed TestResponse(bool result, string message) to only add the message if the PassFailResult is failing
+- Added Hover() method
+- Added DragAndDrop() method
+- Made many public methods in WebBrowser.cs virtual
