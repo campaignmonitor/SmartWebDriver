@@ -18,8 +18,18 @@ using SmartWebDriver.Extensions;
 namespace SmartWebDriver
 {
     public class WebBrowser
-    {
+    {       
         private IWebDriver _webdriver;
+
+        static WebBrowser()
+        {
+            string target = @"c:\temp";
+            if (!Directory.Exists(target))
+            {
+                Directory.CreateDirectory(target);
+            }
+            Environment.CurrentDirectory = (target);
+        }
 
         public WebBrowser(IWebDriver driver)
         {
@@ -181,9 +191,9 @@ namespace SmartWebDriver
 
         public virtual void Check(PageElement pageElement)
         {
+            
             WaitForAny(pageElement, 30.Seconds());
-            var element = GetElement(pageElement);
-
+            var element = GetElement(pageElement);          
             if (!element.Selected)
             {
                 element.Click();
@@ -277,6 +287,13 @@ namespace SmartWebDriver
             ((IJavaScriptExecutor) _webdriver).ExecuteScript(script, args);
         }
 
+        private void HighLight(IWebElement element)
+        {            
+            //highlight
+            ExecuteScript("arguments[0].style.border='2px solid red'", new object[] {element});
+
+        }
+
         public virtual bool Exists(PageElement pageElement)
         {
             try
@@ -323,12 +340,21 @@ namespace SmartWebDriver
         }
 
         private IWebElement GetElement(PageElement element)
-        {
+        {            
             var selectorTried = "";
             var searchContext = GetElementFinder(element, out selectorTried);
             try
             {
-               return _webdriver.FindElement(searchContext);
+                IWebElement webElement = _webdriver.FindElement(searchContext);
+                if (element.XPath != null && element.XPath.Length != 0)
+                {
+                    string title = element.Description;
+                    string page_title = _webdriver.Title;
+                    HighLight(webElement);
+                    string path = $@"{Directory.GetCurrentDirectory()}\{page_title}{title}.png";
+                    CaptureWebPageToFile(path);
+                }
+                return webElement;
             }
             catch (Exception e)
             {
