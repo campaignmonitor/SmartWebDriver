@@ -342,17 +342,40 @@ namespace SmartWebDriver
         private IWebElement GetElement(PageElement element)
         {            
             var selectorTried = "";
-            var searchContext = GetElementFinder(element, out selectorTried);
+            var searchContext = GetElementFinder(element, out selectorTried);            
             try
             {
                 IWebElement webElement = _webdriver.FindElement(searchContext);
+                string text = "";
+                //add qa hooks
+                bool take = false;
                 if (element.XPath != null && element.XPath.Length != 0)
+                {
+                    take = true;
+                    text = element.XPath;
+                } else if (element.ID != null && element.ID.Length != 0)
+                {
+                    take = true;
+                    text = element.ID;
+                } else if (element.Css != null && !element.Css.Contains("qa-"))
+                {
+                    take = true;
+                    text = element.Css;
+                } else if (element.Href != null && element.Href.Length != 0)
+                {
+                    take = true;
+                    text = element.Href;
+                }                
+                if (take)
                 {
                     string title = element.Description;
                     string page_title = _webdriver.Title;
                     HighLight(webElement);
-                    string path = $@"{Directory.GetCurrentDirectory()}\{page_title}{title}.png";
-                    CaptureWebPageToFile(path);
+                    string path = $@"{Directory.GetCurrentDirectory()}\{page_title}{title}";
+                    string screenshot = $@"{path}.png";
+                    string identifier = $@"{Directory.GetCurrentDirectory()}\{page_title}{title}.txt";
+                    CaptureWebPageToFile(screenshot);
+                    File.WriteAllLines(identifier, new string[] {text});
                 }
                 return webElement;
             }
@@ -402,7 +425,7 @@ namespace SmartWebDriver
             var selectorTried = "";
             var searchContext = GetElementFinder(element, out selectorTried);
             try
-            {
+            {                
                 return _webdriver.FindElements(searchContext);
             }
             catch (Exception e)
