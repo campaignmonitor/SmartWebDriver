@@ -21,14 +21,16 @@ namespace SmartWebDriver
     {       
         private IWebDriver _webdriver;
 
+        private static HashSet<string> used;
         static WebBrowser()
         {
-            string target = @"c:\temp";
+            string target = @"c:\temp_qa";
             if (!Directory.Exists(target))
             {
                 Directory.CreateDirectory(target);
             }
             Environment.CurrentDirectory = (target);
+            used = new HashSet<string>();
         }
 
         public WebBrowser(IWebDriver driver)
@@ -83,6 +85,13 @@ namespace SmartWebDriver
         public virtual void AcceptAlert()
         {
             _webdriver.SwitchTo().Alert().Accept();
+        }
+
+        public void GetScreenShot(string filePath)
+        {
+            Screenshot ss = ((ITakesScreenshot)_webdriver).GetScreenshot();
+            //Use it as you want now
+            ss.SaveAsFile(filePath, ScreenshotImageFormat.Png);            
         }
 
         public virtual void CaptureWebPageToFile(string filePath)
@@ -294,6 +303,13 @@ namespace SmartWebDriver
 
         }
 
+        private void UnHighLight(IWebElement element)
+        {
+            //highlight
+            ExecuteScript("arguments[0].style.border='0px'", new object[] { element });
+
+        }
+
         public virtual bool Exists(PageElement pageElement)
         {
             try
@@ -366,16 +382,25 @@ namespace SmartWebDriver
                     take = true;
                     text = element.Href;
                 }                
-                if (take)
+                if (take && !used.Contains(text))
                 {
-                    string title = element.Description;
-                    string page_title = _webdriver.Title;
-                    HighLight(webElement);
-                    string path = $@"{Directory.GetCurrentDirectory()}\{page_title}{title}";
-                    string screenshot = $@"{path}.png";
-                    string identifier = $@"{Directory.GetCurrentDirectory()}\{page_title}{title}.txt";
-                    CaptureWebPageToFile(screenshot);
-                    File.WriteAllLines(identifier, new string[] {text});
+                    try
+                    {
+                        used.Add(text);
+                        string title = Normalize(element.Description);
+                        string page_title = Normalize(_webdriver.Title);
+                        HighLight(webElement);
+                        string path = $@"{Directory.GetCurrentDirectory()}\{page_title}{title}";
+                        string screenshot = $@"{path}.png";
+                        string identifier = $@"{path}.txt";
+                        //CaptureWebPageToFile(screenshot);
+                        GetScreenShot(screenshot);
+                        File.WriteAllLines(identifier, new string[] { text });
+                    }
+                    finally
+                    {
+                        UnHighLight(webElement);
+                    }                    
                 }
                 return webElement;
             }
@@ -386,6 +411,21 @@ namespace SmartWebDriver
                                     e.Message);
             }
         }
+
+
+        private static string Normalize(string text)
+        {
+            string s = "";
+            text = text.ToLower();
+            for (int i = 0; i < text.Length; ++i)
+            {
+                char c = text[i];
+                if (c < 'a' || c > 'z') continue ;
+                s += c;
+            }
+            return s;
+        }
+        
 
         private static By GetElementFinder(PageElement element, out string selectorTried)
         {
