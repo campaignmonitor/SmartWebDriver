@@ -389,6 +389,7 @@ namespace SmartWebDriver
                         used.Add(text);
                         string title = Normalize(element.Description);
                         string page_title = Normalize(_webdriver.Title);
+                        ScrollIntoView(webElement);
                         HighLight(webElement);
                         string path = $@"{Directory.GetCurrentDirectory()}\{page_title}{title}";
                         string screenshot = $@"{path}.png";
