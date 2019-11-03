@@ -391,7 +391,12 @@ namespace SmartWebDriver
                         string page_title = Normalize(_webdriver.Title);
                         ScrollIntoView(webElement);
                         HighLight(webElement);
-                        string path = $@"{Directory.GetCurrentDirectory()}\{page_title}{title}";
+                        string dir = $@"{Directory.GetCurrentDirectory()}\{page_title}";
+                        if (!Directory.Exists(dir))
+                        {
+                            Directory.CreateDirectory(dir);
+                        }
+                        string path = $@"{dir}\{title}";
                         string screenshot = $@"{path}.png";
                         string identifier = $@"{path}.txt";
                         //CaptureWebPageToFile(screenshot);
