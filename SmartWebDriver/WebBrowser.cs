@@ -18,14 +18,40 @@ using SmartWebDriver.Extensions;
 namespace SmartWebDriver
 {
     public class WebBrowser
-    {
+    {       
         private IWebDriver _webdriver;
+
+        private static HashSet<string> used;
+
+        private static HashSet<string> dlls;
+
+        private static HashSet<string> testsName;
+        static WebBrowser()
+        {
+            string target = @"c:\temp_qa";
+            if (!Directory.Exists(target))
+            {
+                Directory.CreateDirectory(target);
+            }
+            Environment.CurrentDirectory = (target);
+            used = new HashSet<string>();
+            dlls = new HashSet<string>();
+            testsName = new HashSet<string>();
+            dlls.Add("RegressionTests.dll");
+            dlls.Add("PaymentsTests.dll");
+            dlls.Add("EmailBuilderTests.dll");
+            dlls.Add("WorkflowTests.dll");
+        }
 
         public WebBrowser(IWebDriver driver)
         {
             _webdriver = driver;
         }
 
+        public IWebDriver GetDriver()
+        {
+            return _webdriver;
+        }
         public WebBrowser(BrowserOptions browserOptions = null)
         {
             // the drivers folder containing the .exe will be in the same folder as the dll running the tests, find it
@@ -69,6 +95,13 @@ namespace SmartWebDriver
         public virtual void AcceptAlert()
         {
             _webdriver.SwitchTo().Alert().Accept();
+        }
+
+        public void GetScreenShot(string filePath)
+        {
+            Screenshot ss = ((ITakesScreenshot)_webdriver).GetScreenshot();
+            //Use it as you want now
+            ss.SaveAsFile(filePath, ScreenshotImageFormat.Png);            
         }
 
         public virtual void CaptureWebPageToFile(string filePath)
@@ -177,9 +210,9 @@ namespace SmartWebDriver
 
         public virtual void Check(PageElement pageElement)
         {
+            
             WaitForAny(pageElement, 30.Seconds());
-            var element = GetElement(pageElement);
-
+            var element = GetElement(pageElement);          
             if (!element.Selected)
             {
                 element.Click();
@@ -273,6 +306,20 @@ namespace SmartWebDriver
             ((IJavaScriptExecutor) _webdriver).ExecuteScript(script, args);
         }
 
+        private void HighLight(IWebElement element)
+        {            
+            //highlight
+            ExecuteScript("arguments[0].style.border='2px solid red'", new object[] {element});
+
+        }
+
+        private void UnHighLight(IWebElement element)
+        {
+            //highlight
+            ExecuteScript("arguments[0].style.border='0px'", new object[] { element });
+
+        }
+
         public virtual bool Exists(PageElement pageElement)
         {
             try
@@ -318,13 +365,81 @@ namespace SmartWebDriver
             }
         }
 
-        private IWebElement GetElement(PageElement element)
+        private string GetTestName()
         {
+            StackTrace stackTrace = new StackTrace();            
+            for (int i = stackTrace.FrameCount - 1; i >= 0; --i)
+            {
+                MethodBase method = stackTrace.GetFrame(i).GetMethod();
+                if (dlls.Contains(method.Module.Name))
+                {
+                    return method.Name;
+                }
+            }
+            return null;
+        }
+
+        private IWebElement GetElement(PageElement element)
+        {            
             var selectorTried = "";
-            var searchContext = GetElementFinder(element, out selectorTried);
+            var searchContext = GetElementFinder(element, out selectorTried);            
             try
             {
-               return _webdriver.FindElement(searchContext);
+                IWebElement webElement = _webdriver.FindElement(searchContext);
+                string text = "";
+                //add qa hooks
+                bool take = false;
+                if (element.XPath != null && element.XPath.Length != 0)
+                {
+                    take = true;
+                    text = element.XPath;
+                } else if (element.ID != null && element.ID.Length != 0)
+                {
+                    take = true;
+                    text = element.ID;
+                } else if (element.Css != null && !element.Css.Contains("qa-"))
+                {
+                    take = true;
+                    text = element.Css;
+                } else if (element.Href != null && element.Href.Length != 0)
+                {
+                    take = true;
+                    text = element.Href;
+                }                
+                if (take && !used.Contains(text))
+                {
+                    try
+                    {
+                        used.Add(text);
+                        string title = Normalize(element.Description);
+                        string page_title = Normalize(_webdriver.Title);
+                        ScrollIntoView(webElement);
+                        HighLight(webElement);                      
+                        string test = GetTestName();
+                        string top = $@"{Directory.GetCurrentDirectory()}\{test}";
+                        if (test != null && !Directory.Exists(top))
+                        {
+                            Directory.CreateDirectory(top);                            
+                        }
+                        string dir = $@"{top}\{page_title}";
+                        if (!Directory.Exists(dir))
+                        {
+                            Directory.CreateDirectory(dir);
+                        }
+
+                        string path = $@"{dir}\{title}";
+                        string screenshot = $@"{path}.png";
+                        string identifier = $@"{path}.txt";
+                        //CaptureWebPageToFile(screenshot);
+                        GetScreenShot(screenshot);
+                        File.WriteAllLines(identifier, new string[] { text });
+                    }
+                    finally
+                    {
+                        UnHighLight(webElement);
+                    }                    
+                }
+                return webElement;
             }
             catch (Exception e)
             {
@@ -333,6 +448,23 @@ namespace SmartWebDriver
                                     e.Message);
             }
         }
+
+        
+
+        private static string Normalize(string text)
+        {
+            string s = "";
+            text = text.ToLower();
+            for (int i = 0; i < text.Length; ++i)
+            {
+                char c = text[i];
+                if (c < 'a' || c > 'z') continue ;
+                s += c;
+            }
+            return s;
+        }
+
+        
 
         private static By GetElementFinder(PageElement element, out string selectorTried)
         {
@@ -372,7 +504,7 @@ namespace SmartWebDriver
             var selectorTried = "";
             var searchContext = GetElementFinder(element, out selectorTried);
             try
-            {
+            {                
                 return _webdriver.FindElements(searchContext);
             }
             catch (Exception e)
