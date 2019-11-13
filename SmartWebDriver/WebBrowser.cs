@@ -414,18 +414,19 @@ namespace SmartWebDriver
                         string title = Normalize(element.Description);
                         string page_title = Normalize(_webdriver.Title);
                         ScrollIntoView(webElement);
-                        HighLight(webElement);
-                        string dir = $@"{Directory.GetCurrentDirectory()}\{page_title}";
+                        HighLight(webElement);                      
+                        string test = GetTestName();
+                        string top = $@"{Directory.GetCurrentDirectory()}\{test}";
+                        if (test != null && !Directory.Exists(top))
+                        {
+                            Directory.CreateDirectory(top);                            
+                        }
+                        string dir = $@"{top}\{page_title}";
                         if (!Directory.Exists(dir))
                         {
                             Directory.CreateDirectory(dir);
                         }
-                        string test = GetTestName();
-                        if (test != null && !testsName.Contains(test))
-                        {
-                            Directory.CreateDirectory($@"{Directory.GetCurrentDirectory()}\{test}");
-                            testsName.Add(test);
-                        }
+
                         string path = $@"{dir}\{title}";
                         string screenshot = $@"{path}.png";
                         string identifier = $@"{path}.txt";
