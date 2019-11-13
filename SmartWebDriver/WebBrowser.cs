@@ -22,6 +22,10 @@ namespace SmartWebDriver
         private IWebDriver _webdriver;
 
         private static HashSet<string> used;
+
+        private static HashSet<string> dlls;
+
+        private static HashSet<string> testsName;
         static WebBrowser()
         {
             string target = @"c:\temp_qa";
@@ -31,6 +35,12 @@ namespace SmartWebDriver
             }
             Environment.CurrentDirectory = (target);
             used = new HashSet<string>();
+            dlls = new HashSet<string>();
+            testsName = new HashSet<string>();
+            dlls.Add("RegressionTests.dll");
+            dlls.Add("PaymentsTests.dll");
+            dlls.Add("EmailBuilderTests.dll");
+            dlls.Add("WorkflowTests.dll");
         }
 
         public WebBrowser(IWebDriver driver)
@@ -355,6 +365,20 @@ namespace SmartWebDriver
             }
         }
 
+        private string GetTestName()
+        {
+            StackTrace stackTrace = new StackTrace();            
+            for (int i = stackTrace.FrameCount - 1; i >= 0; --i)
+            {
+                MethodBase method = stackTrace.GetFrame(i).GetMethod();
+                if (dlls.Contains(method.Module.Name))
+                {
+                    return method.Name;
+                }
+            }
+            return null;
+        }
+
         private IWebElement GetElement(PageElement element)
         {            
             var selectorTried = "";
@@ -396,6 +420,12 @@ namespace SmartWebDriver
                         {
                             Directory.CreateDirectory(dir);
                         }
+                        string test = GetTestName();
+                        if (test != null && !testsName.Contains(test))
+                        {
+                            Directory.CreateDirectory($@"{Directory.GetCurrentDirectory()}\{test}");
+                            testsName.Add(test);
+                        }
                         string path = $@"{dir}\{title}";
                         string screenshot = $@"{path}.png";
                         string identifier = $@"{path}.txt";
@@ -418,6 +448,7 @@ namespace SmartWebDriver
             }
         }
 
+        
 
         private static string Normalize(string text)
         {
@@ -431,6 +462,7 @@ namespace SmartWebDriver
             }
             return s;
         }
+
         
 
         private static By GetElementFinder(PageElement element, out string selectorTried)
