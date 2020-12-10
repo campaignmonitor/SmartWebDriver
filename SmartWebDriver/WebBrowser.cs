@@ -30,6 +30,7 @@ namespace SmartWebDriver
         {
             return _webdriver;
         }
+
         public WebBrowser(BrowserOptions browserOptions = null)
         {
             // the drivers folder containing the .exe will be in the same folder as the dll running the tests, find it
