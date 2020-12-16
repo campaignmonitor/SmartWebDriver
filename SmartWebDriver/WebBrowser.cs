@@ -26,6 +26,11 @@ namespace SmartWebDriver
             _webdriver = driver;
         }
 
+        public IWebDriver GetDriver()
+        {
+            return _webdriver;
+        }
+
         public WebBrowser(BrowserOptions browserOptions = null)
         {
             // the drivers folder containing the .exe will be in the same folder as the dll running the tests, find it
@@ -41,12 +46,21 @@ namespace SmartWebDriver
             StartWebbrowser(path, browserOptions);
         }
 
-        private void StartWebbrowser(string path, BrowserOptions browerOptions)
+        public WebBrowser(string path, BrowserOptions browserOptions ,string brower_path)
+        {
+            StartWebbrowser(path, browserOptions, brower_path);
+        }
+
+        private void StartWebbrowser(string path, BrowserOptions browerOptions, string browserpath = default)
         {
             switch (browerOptions.BrowserType)
             {
                 case (Browsers.Chrome):
                     var chromeOptions = new ChromeOptions();
+                    if (!string.IsNullOrEmpty(browserpath))
+                    {
+                        chromeOptions.BinaryLocation = browserpath;
+                    }
                     chromeOptions.AddArguments("--dns-prefetch-disable", "start-maximized", "test-type");
                         if (browerOptions.RunInIncognito)
                         {
